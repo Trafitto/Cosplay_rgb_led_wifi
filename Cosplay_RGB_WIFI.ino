@@ -43,13 +43,31 @@ const String HtmlTitle = "<h1>RGB LED Controller<br/><dir>For manage the color o
 const String HtmlRED = "<big><dir>Led is Red<b>Led_RED</dir></b></big><br/>\n";
 const String HtmlGREEN = "<big><dir>Led is Green<b>Led_GREEN</dir></b></big><br/>\n";
 const String HtmlBLUE ="<big><dir>Led is Blue<b>Led_BLUE</dir></b></big><br/>\n";
+const String HtmlRAINBOW = "<big><dir>Led is on Rainbow mode<b>Led_Rainbow</dir></b></big><br/>\n";
+const String HtmlRAINBOW2 = "<big><dir>Led is on Rainbow mode<b>Led_Rainbow</dir></b></big><br/>\n";
 const String HtmlButtons = 
+    "<a href=\"Led_Rainbow\"><button style=\"display: block; width: 100%;\">Led Rainbow effect</button></a><br/>"
+    "<a href=\"Led_Rainbow2\"><button style=\"display: block; width: 100%;\">Led Rainbow effect 2</button></a><br/>"
     "<a href=\"Led_Red\"><button style=\"display: block; width: 100%;\">Led Red</button></a><br/>"
     "<a href=\"Led_Green\"><button style=\"display: block; width: 100%;\">Led Green</button></a><br/>"
     "<a href=\"Led_Blue\"><button style=\"display: block; width: 100%;\">Led Blue</button></a><br/>";
 const String HtmlHtmlClose = "</html>"; //chiude il tag html della pagina
 
+void handleLedRainbow()
+{
+    stato='Rainbow';
+     rainbow(20);
+    Serial.write("LED IS NOW on rainbow mode");
+    response();
+}
 
+void handleLedRainbow2()
+{
+    stato='Rainbow2';
+     rainbowCycle(20);
+    Serial.write("LED IS NOW on rainbow mode 2");
+    response();
+}
 void handleLedRed()
 {
     stato='Red';
@@ -93,6 +111,14 @@ void response()
     {
         htmlRes +=HtmlBLUE;
     }
+    else if (stato=='Rainbow')
+    {
+        htmlRes+=HtmlRAINBOW;
+    }
+    else if (stato=='Rainbow2')
+    {
+        htmlRes+=HtmlRAINBOW2;
+    }
 
      htmlRes += HtmlButtons; 
      htmlRes += HtmlHtmlClose;
@@ -113,6 +139,8 @@ void setup()
 	Serial.println(myIP);
 
 	server.on("/", handleRoot);
+    server.on("/Led_Rainbow",handleLedRainbow);
+    server.on("/Led_Rainbow2",handleLedRainbow);
     server.on("/Led_Red", handleLedRed);
     server.on("/Led_Green", handleLedGreen);
     server.on("/Led_Blue", handleLedBlue);
@@ -137,10 +165,54 @@ void loop()
 //colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
 
 */
+//SETTA I LED SU UN COLORE
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
     strip.setPixelColor(i, c);
     strip.show();
     delay(wait);
+  }
+}
+//DA TESTARE MEGLIO Funzione base rainbow
+void rainbow(uint8_t wait) {
+  uint16_t i, j;
+
+  for(j=0; j<256; j++) {
+    for(i=0; i<strip.numPixels(); i++) {
+      strip.setPixelColor(i, Wheel((i+j) & 255));
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+//DA TESTARE
+// Slightly different, this makes the rainbow equally distributed throughout
+void rainbowCycle(uint8_t wait) {
+  uint16_t i, j;
+
+  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+    for(i=0; i< strip.numPixels(); i++) {
+      strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+//DA TESTARE
+//Theatre-style crawling lights with rainbow effect
+void theaterChaseRainbow(uint8_t wait) {
+  for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
+    for (int q=0; q < 3; q++) {
+      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
+        strip.setPixelColor(i+q, Wheel( (i+j) % 255));    //turn every third pixel on
+      }
+      strip.show();
+
+      delay(wait);
+
+      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
+        strip.setPixelColor(i+q, 0);        //turn every third pixel off
+      }
+    }
   }
 }
