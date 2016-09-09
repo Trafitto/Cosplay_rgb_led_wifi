@@ -44,7 +44,7 @@ const String HtmlRED = "<big><dir>Led is Red<b>Led_RED</dir></b></big><br/>\n";
 const String HtmlGREEN = "<big><dir>Led is Green<b>Led_GREEN</dir></b></big><br/>\n";
 const String HtmlBLUE ="<big><dir>Led is Blue<b>Led_BLUE</dir></b></big><br/>\n";
 const String HtmlRAINBOW = "<big><dir>Led is on Rainbow mode<b>Led_Rainbow</dir></b></big><br/>\n";
-const String HtmlRAINBOW2 = "<big><dir>Led is on Rainbow mode<b>Led_Rainbow</dir></b></big><br/>\n";
+const String HtmlRAINBOW2 = "<big><dir>Led is on Rainbow mode 2<b>Led_Rainbow 2</dir></b></big><br/>\n";
 const String HtmlButtons = 
     "<a href=\"Led_Rainbow\"><button style=\"display: block; width: 100%;\">Led Rainbow effect</button></a><br/>"
     "<a href=\"Led_Rainbow2\"><button style=\"display: block; width: 100%;\">Led Rainbow effect 2</button></a><br/>"
@@ -56,7 +56,7 @@ const String HtmlHtmlClose = "</html>"; //chiude il tag html della pagina
 void handleLedRainbow()
 {
     stato='Rainbow';
-     rainbow(20);
+     rainbow(50);
     Serial.write("LED IS NOW on rainbow mode");
     response();
 }
@@ -64,7 +64,8 @@ void handleLedRainbow()
 void handleLedRainbow2()
 {
     stato='Rainbow2';
-     rainbowCycle(20);
+     
+     rainbowCycle(50);
     Serial.write("LED IS NOW on rainbow mode 2");
     response();
 }
@@ -139,11 +140,12 @@ void setup()
 	Serial.println(myIP);
 
 	server.on("/", handleRoot);
-    server.on("/Led_Rainbow",handleLedRainbow);
-    server.on("/Led_Rainbow2",handleLedRainbow2);
+    
     server.on("/Led_Red", handleLedRed);
     server.on("/Led_Green", handleLedGreen);
     server.on("/Led_Blue", handleLedBlue);
+    server.on("/Led_Rainbow",handleLedRainbow);
+    server.on("/Led_Rainbow2", handleLedRainbow2);
     
 
 	server.begin();
@@ -184,6 +186,7 @@ void rainbow(uint8_t wait) {
     strip.show();
     delay(wait);
   }
+  Serial.write("End of rainbow");
 }
 //DA TESTARE
 // Slightly different, this makes the rainbow equally distributed throughout
@@ -197,6 +200,7 @@ void rainbowCycle(uint8_t wait) {
     strip.show();
     delay(wait);
   }
+  Serial.write("End of rainbowCycle");
 }
 //DA TESTARE
 //Theatre-style crawling lights with rainbow effect
@@ -215,6 +219,7 @@ void theaterChaseRainbow(uint8_t wait) {
       }
     }
   }
+  
 }
 
 // Input a value 0 to 255 to get a color value.
