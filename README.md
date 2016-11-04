@@ -1,23 +1,13 @@
 # README #
 
-Use a Nodemcu for WIFI remote control 
+Use a Nodemcu for WIFI remote control of a rgb led
+
+### What I need? ###
+
+* Nodemcu dev kit
+* Led WS2812b
 
 ### How do I get set up? ###
 
-* 
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
 
-### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
